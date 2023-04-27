@@ -1,4 +1,6 @@
+import { Request } from 'express';
 import TodoService from '../services/todo.service';
+import { RequestError } from '../helpers';
 
 export class TodoController {
   constructor(private todoService: TodoService) {}
@@ -9,17 +11,25 @@ export class TodoController {
   }
 
   async addTodo() {
-    const newTodo = await this.todoService.findAll();
+    const newTodo = await this.todoService.addTodo(); // req.body;
     return { data: newTodo, status: 201 };
   }
 
-  async deleteTodo() {
-    const removedTodo = await this.todoService.findAll();
+  async deleteTodo(req: Request) {
+    const { id } = req.params;
+    const removedTodo = await this.todoService.deleteTodo(id);
+    if (!removedTodo) {
+      throw RequestError(404, 'Not found');
+    }
     return { data: removedTodo };
   }
 
-  async updateById() {
-    const updatedTodo = await this.todoService.findAll();
+  async updateById(req: Request) {
+    const { id } = req.params;
+    const updatedTodo = await this.todoService.updateById(id); // req.body
+    if (!updatedTodo) {
+      throw RequestError(404, 'Not found');
+    }
     return { data: updatedTodo };
   }
 }
