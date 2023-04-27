@@ -7,6 +7,11 @@ export default class TodoService {
     return allTodos as ITodo[];
   }
 
+  async findById(id: string) {
+    const todo = await Todo.findOneBy({ id });
+    return todo as ITodo;
+  }
+
   async addTodo(todo: ITodo) {
     const todoResponse = await Todo.save({ ...todo });
     return todoResponse;
@@ -17,7 +22,7 @@ export default class TodoService {
     return response?.affected === 1 ? { message: 'Todo is deleted successfully.' } : null;
   }
 
-  async updateById(id: string, todo: ITodo) {
+  async updateById(id: string, todo: Partial<ITodo>) {
     const response = await Todo.update({ id }, todo);
     return response?.affected === 1 ? { message: 'Todo is updated successfully.' } : null;
   }

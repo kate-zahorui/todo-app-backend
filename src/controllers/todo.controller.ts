@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import TodoService from '../services/todo.service';
 import { RequestError } from '../helpers';
-import { ICtrlAddTodoRequest } from 'types/todos.type';
+import { ICtrlAddTodoRequest, ICtrlUpdateTodoRequest } from 'types/todos.type';
 
 export class TodoController {
   constructor(private todoService: TodoService) {}
@@ -9,6 +9,12 @@ export class TodoController {
   async getAllTodo() {
     const todos = await this.todoService.findAll();
     return { data: todos };
+  }
+
+  async getOneById(req: Request) {
+    const { id } = req.params;
+    const todo = await this.todoService.findById(id);
+    return { data: todo };
   }
 
   async addTodo(req: ICtrlAddTodoRequest) {
@@ -25,7 +31,7 @@ export class TodoController {
     return { data: removedTodo };
   }
 
-  async updateById(req: ICtrlAddTodoRequest) {
+  async updateById(req: ICtrlUpdateTodoRequest) {
     const { id } = req.params;
     const updatedTodo = await this.todoService.updateById(id, req.body);
     if (!updatedTodo) {
