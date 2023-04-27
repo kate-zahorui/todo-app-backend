@@ -1,17 +1,24 @@
+import { ITodo } from '../types/todos.type';
+import { Todo } from '../entities/Todo.entity';
+
 export default class TodoService {
   async findAll() {
-    return 'Todos';
+    const allTodos = await Todo.find();
+    return allTodos as ITodo[];
   }
 
-  async addTodo() {
-    return 'Todo is added';
+  async addTodo(todo: ITodo) {
+    const todoResponse = await Todo.save({ ...todo });
+    return todoResponse;
   }
 
   async deleteTodo(id: string) {
-    return `Todo ${id} is deleted`;
+    const response = await Todo.delete({ id });
+    return response?.affected === 1 ? { message: 'Todo is deleted successfully.' } : null;
   }
 
-  async updateById(id: string) {
-    return `Todo ${id} is updated`;
+  async updateById(id: string, todo: ITodo) {
+    const response = await Todo.update({ id }, todo);
+    return response?.affected === 1 ? { message: 'Todo is updated successfully.' } : null;
   }
 }

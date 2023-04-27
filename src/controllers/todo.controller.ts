@@ -1,6 +1,7 @@
 import { Request } from 'express';
 import TodoService from '../services/todo.service';
 import { RequestError } from '../helpers';
+import { ICtrlAddTodoRequest } from 'types/todos.type';
 
 export class TodoController {
   constructor(private todoService: TodoService) {}
@@ -10,8 +11,8 @@ export class TodoController {
     return { data: todos };
   }
 
-  async addTodo() {
-    const newTodo = await this.todoService.addTodo(); // req.body;
+  async addTodo(req: ICtrlAddTodoRequest) {
+    const newTodo = await this.todoService.addTodo(req.body);
     return { data: newTodo, status: 201 };
   }
 
@@ -24,9 +25,9 @@ export class TodoController {
     return { data: removedTodo };
   }
 
-  async updateById(req: Request) {
+  async updateById(req: ICtrlAddTodoRequest) {
     const { id } = req.params;
-    const updatedTodo = await this.todoService.updateById(id); // req.body
+    const updatedTodo = await this.todoService.updateById(id, req.body);
     if (!updatedTodo) {
       throw RequestError(404, 'Not found');
     }
